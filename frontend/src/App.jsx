@@ -20,12 +20,12 @@ function App() {
             className="mx-auto h-25 w-auto" 
           />
           <h2 className="mb-10 text-center text-2xl font-bold tracking-tight text-gray-900">
-            Bienvenido
+            TB-CNN
           </h2>
           <form action="#" method="POST" className="space-y-6">
             <div>
               <label htmlFor="usermed" className="block text-sm font-medium text-gray-900 text-left">
-  Nombre de usuario
+  Usuario
 </label>
 <div className="mt-2">
   <input 
