@@ -1,9 +1,59 @@
-
+import { useState } from 'react';
 import fondo from "./assets/perfecta.jpg";
 import logo from "./assets/dr.png";
 import './App.css'
 
 function App() {
+  const [formData, setFormData] = useState({
+    usermed: '',
+    clave: ''
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('http://localhost:5000/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Guardar token en localStorage
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('usermed', formData.usermed);
+        
+        // Redirigir al dashboard (deberás crear esta página)
+        window.location.href = '/dashboard';
+        console.log('Login exitoso, token:', data.token);
+        alert('Login exitoso!');
+      } else {
+        setError(data.message);
+      }
+    } catch (err) {
+      setError('Error de conexión con el servidor');
+      console.error('Error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -11,10 +61,8 @@ function App() {
         className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 bg-cover bg-center"
         style={{ backgroundImage: `url(${fondo})` }}
       >
-
-
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm bg-white/80 p-6 rounded-xl shadow-lg">
-        <img 
+          <img 
             src={logo}
             alt="Your Company" 
             className="mx-auto h-25 w-auto" 
@@ -22,43 +70,54 @@ function App() {
           <h2 className="mb-10 text-center text-2xl font-bold tracking-tight text-gray-900">
             TB-CNN
           </h2>
-          <form action="#" method="POST" className="space-y-6">
+          
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              {error}
+            </div>
+          )}
+          
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="usermed" className="block text-sm font-medium text-gray-900 text-left">
-  Usuario
-</label>
-<div className="mt-2">
-  <input 
-    id="usermed" 
-    type="text" 
-    name="usermed" 
-    required 
-    autoComplete="username" 
-    className="block w-full rounded-md bg-white px-3 py-1.5 text-base 
-               text-gray-900 outline-1 outline-gray-300 
-               placeholder:text-gray-400 focus:outline-2 
-               focus:outline-teal-600 sm:text-sm" 
-  />
-</div>
+                Usuario
+              </label>
+              <div className="mt-2">
+                <input 
+                  id="usermed" 
+                  type="text" 
+                  name="usermed" 
+                  value={formData.usermed}
+                  onChange={handleChange}
+                  required 
+                  autoComplete="username" 
+                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base 
+                            text-gray-900 outline-1 outline-gray-300 
+                            placeholder:text-gray-400 focus:outline-2 
+                            focus:outline-teal-600 sm:text-sm" 
+                />
+              </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm font-medium text-gray-900">
+                <label htmlFor="clave" className="block text-sm font-medium text-gray-900">
                   Contraseña
                 </label>
               </div>
               <div className="mt-2">
                 <input 
-                  id="password" 
+                  id="clave" 
                   type="password" 
-                  name="password" 
+                  name="clave" 
+                  value={formData.clave}
+                  onChange={handleChange}
                   required 
                   autoComplete="current-password" 
                   className="block w-full rounded-md bg-white px-3 py-1.5 text-base 
-                             text-gray-900 outline-1 outline-gray-300 
-                             placeholder:text-gray-400 focus:outline-2 
-                             focus:outline-indigo-600 sm:text-sm" 
+                            text-gray-900 outline-1 outline-gray-300 
+                            placeholder:text-gray-400 focus:outline-2 
+                            focus:outline-teal-600 sm:text-sm" 
                 />
               </div>
             </div>
@@ -66,13 +125,14 @@ function App() {
             <div>
               <button 
                 type="submit" 
+                disabled={loading}
                 className="flex w-full justify-center rounded-md bg-teal-600 
-                           px-3 py-1.5 text-sm font-semibold text-white shadow 
-                           hover:bg-teal-500 
-                           focus-visible:outline-2 focus-visible:outline-offset-2 
-                           focus-visible:outline-teal-600"
+                          px-3 py-1.5 text-sm font-semibold text-white shadow 
+                          hover:bg-teal-500 disabled:opacity-50
+                          focus-visible:outline-2 focus-visible:outline-offset-2 
+                          focus-visible:outline-teal-600"
               >
-                Ingresar
+                {loading ? 'Verificando...' : 'Ingresar'}
               </button>
             </div>
           </form>

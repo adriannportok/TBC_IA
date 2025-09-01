@@ -32,29 +32,38 @@ def validar_credenciales(usermed, clave):
 # 🚪 Ruta de login
 @auth_bp.route('/login', methods=['POST'])
 def login():
-    data = request.get_json()
-    usermed = data.get('usermed')
-    clave = data.get('clave')
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"success": False, "message": "No se proporcionaron datos"}), 400
+            
+        usermed = data.get('usermed')
+        clave = data.get('clave')
 
-    if not usermed or not clave:
-        return jsonify({"success": False, "message": "Faltan campos"}), 400
+        if not usermed or not clave:
+            return jsonify({"success": False, "message": "Faltan campos"}), 400
 
-    resultado, mensaje = validar_credenciales(usermed, clave)
+        resultado, mensaje = validar_credenciales(usermed, clave)
 
-    if resultado is None:
-        return jsonify({"success": False, "message": mensaje}), 500
-    elif resultado is False:
-        status_code = 404 if mensaje == "Usuario no encontrado" else 401
-        return jsonify({"success": False, "message": mensaje}), status_code
+        if resultado is None:
+            return jsonify({"success": False, "message": mensaje}), 500
+        elif resultado is False:
+            status_code = 404 if mensaje == "Usuario no encontrado" else 401
+            return jsonify({"success": False, "message": mensaje}), status_code
 
-    # 🎟️ Generar token JWT (opcional)
-    token = jwt.encode({
-        "usermed": usermed,
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=2)
-    }, SECRET_KEY, algorithm="HS256")
+        # Generar token JWT
+        token = jwt.encode({
+            "usermed": usermed,
+            "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=2)
+        }, SECRET_KEY, algorithm="HS256")
 
-    return jsonify({
-        "success": True,
-        "message": mensaje,
-        "token": token
-    }), 200
+        return jsonify({
+            "success": True,
+            "message": mensaje,
+            "token": token,
+            "usermed": usermed
+        }), 200
+        
+    except Exception as e:
+        print(f"Error en login: {str(e)}")
+        return jsonify({"success": False, "message": "Error interno del servidor"}), 500
