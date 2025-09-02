@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 
 function Dashboard() {
   useEffect(() => {
-    // Verificar si el usuario está autenticado
     const token = localStorage.getItem('token');
     if (!token) {
       window.location.href = '/';

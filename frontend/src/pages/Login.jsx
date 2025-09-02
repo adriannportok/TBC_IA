@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import fondo from "./assets/perfecta.jpg";
-import logo from "./assets/dr.png";
-import './App.css'
+import fondo from "../assets/perfecta.jpg";
+import logo from "../assets/dr.png";
+import '../styles/Login.css'
 
-function App() {
+function Login() {
   const [formData, setFormData] = useState({
     usermed: '',
     clave: ''
@@ -36,11 +36,8 @@ function App() {
       const data = await response.json();
 
       if (data.success) {
-        // Guardar token en localStorage
         localStorage.setItem('token', data.token);
         localStorage.setItem('usermed', formData.usermed);
-        
-        // Redirigir al dashboard (deberás crear esta página)
         window.location.href = '/dashboard';
         console.log('Login exitoso, token:', data.token);
         alert('Login exitoso!');
@@ -149,4 +146,4 @@ function App() {
   )
 }
 
-export default App
+export default Login

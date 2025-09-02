@@ -1,6 +1,4 @@
 # server-flask
-
-
 # Installation
 
 Install dependencies using:
