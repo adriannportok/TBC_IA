@@ -18,11 +18,11 @@ def test_db():
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT COUNT(*) FROM medico")
+        cur.execute("SELECT COUNT(*) FROM usuario")
         count = cur.fetchone()[0]
         cur.close()
         conn.close()
-        return jsonify({"success": True, "medicos_registrados": count})
+        return jsonify({"success": True, "usuarios_registrados": count})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 

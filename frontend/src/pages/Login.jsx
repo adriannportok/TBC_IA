@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import fondo from "../assets/perfecta.jpg";
-import logo from "../assets/dr.png";
+import logo from "../assets/userdoc.svg";
 import '../styles/Login.css'
 
 function Login() {
   const [formData, setFormData] = useState({
-    usermed: '',
+    usuario: '',
     clave: ''
   });
   const [error, setError] = useState('');
@@ -37,7 +37,10 @@ function Login() {
 
       if (data.success) {
         localStorage.setItem('token', data.token);
-        localStorage.setItem('usermed', formData.usermed);
+        localStorage.setItem('usuario', formData.usuario);
+        localStorage.setItem("rol", data.rol);
+        localStorage.setItem("nombres", data.nombres);
+        localStorage.setItem("apellidos", data.apellidos);
         window.location.href = '/dashboard';
         console.log('Login exitoso, token:', data.token);
         alert('Login exitoso!');
@@ -76,15 +79,15 @@ function Login() {
           
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="usermed" className="block text-sm font-medium text-gray-900 text-left">
+              <label htmlFor="usuario" className="block text-sm font-medium text-gray-900 text-left">
                 Usuario
               </label>
               <div className="mt-2">
                 <input 
-                  id="usermed" 
+                  id="usuario" 
                   type="text" 
-                  name="usermed" 
-                  value={formData.usermed}
+                  name="usuario" 
+                  value={formData.usuario}
                   onChange={handleChange}
                   required 
                   autoComplete="username" 
