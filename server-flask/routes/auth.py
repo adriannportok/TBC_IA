@@ -5,7 +5,7 @@ import jwt
 import datetime
 
 auth_bp = Blueprint('auth', __name__)
-SECRET_KEY = "tu_clave_secreta"  # Reemplaza esto por una clave segura en entorno de producción
+SECRET_KEY = "tu_clave_secreta"  
 
 def validar_credenciales(usuario, clave):
     try:
@@ -20,7 +20,6 @@ def validar_credenciales(usuario, clave):
             return False, "Usuario no encontrado", None
 
         clave_hash, rol, nombres, apellidos = result
-        # postgres devuelve clave como str, convertir a bytes
         if bcrypt.checkpw(clave.encode('utf-8'), clave_hash.encode('utf-8')):
             return True, "Login exitoso", rol, nombres, apellidos
         else:
@@ -29,7 +28,6 @@ def validar_credenciales(usuario, clave):
     except Exception as e:
         return None, "Error interno del servidor", None, None, None
 
-# 🚪 Ruta de login
 @auth_bp.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -47,7 +45,6 @@ def login():
             "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=2)
         }, SECRET_KEY, algorithm="HS256")
 
-        # Asegurar que el token sea string (PyJWT >= 2 ya devuelve str, pero por si acaso)
         if isinstance(token, bytes):
             token = token.decode("utf-8")
 

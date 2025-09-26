@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './index.css'
 import Login from './pages/Login.jsx'
 import Dashboard from './pages/Dashboard.jsx'
+import Pacientes from './pages/Pacientes.jsx'
+import RegistroPaciente from './pages/RegistroPaciente.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -11,6 +13,8 @@ createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/pacientes" element={<Pacientes />} />
+        <Route path="/registropaciente" element={<RegistroPaciente />} />
       </Routes>
     </Router>
   </StrictMode>,

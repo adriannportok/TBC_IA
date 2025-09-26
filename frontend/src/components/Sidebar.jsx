@@ -3,6 +3,8 @@ import user from "../assets/userdoc.svg";
 import { ChevronFirst, ChevronLast } from "lucide-react";
 import { MoreVertical } from "lucide-react";
 import { createContext, useState, useContext } from "react";
+import { Link } from "react-router-dom";
+
 
 const SidebarContext = createContext();
 
@@ -64,7 +66,7 @@ export default function Sidebar({ children }) {
   );
 }
 
-export function SidebarItem({ icon, text, active, alert }) {
+export function SidebarItem({ icon, text, to, active, alert }) {
   const { expanded } = useContext(SidebarContext);
   return (
     <li
@@ -77,13 +79,13 @@ ${
 }`}
     >
       {icon}
-      <span
-        className={`overflow-hidden transition-all ${
-          expanded ? "w-52 ml-3" : "w-0"
-        }`}
+      <Link
+        to={to}
+        className={`overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"}`}
       >
         {text}
-      </span>
+      </Link>
+
       {alert && (
         <div
           className={`absolute right-2 w-2 h-2 rounded bg-indigo-400 ${
