@@ -6,7 +6,7 @@ export default function MainLayout({ children, title }) {
   const rol = localStorage.getItem("rol");
 
   return (
-    <div className="min-h-screen bg-gray-100 flex">
+    <div className="min-h-screen flex">
       <Sidebar>
         {rol === "medico" && (
           <>
@@ -22,8 +22,8 @@ export default function MainLayout({ children, title }) {
         )}
       </Sidebar>
 
-      <div className="flex-1 flex flex-col">
-        <header className="bg-white shadow">
+      <div className="flex-1 flex flex-col min-h-0">
+        <header className="bg-white shadow flex-shrink-0">
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 flex justify-between items-center">
             <h1 className="text-3xl font-bold tracking-tight text-gray-900">
               {title}
@@ -40,7 +40,7 @@ export default function MainLayout({ children, title }) {
           </div>
         </header>
 
-        <main className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+        <main className="flex-1 overflow-auto px-1 py-1 ">
           {children}
         </main>
       </div>

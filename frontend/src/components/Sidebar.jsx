@@ -13,7 +13,7 @@ export default function Sidebar({ children }) {
 
   return (
     <>
-      <aside className="h-screen">
+      <aside className="height:200vh">
         <nav className="h-full flex flex-col bg-white border-r border-gray-200 shadow-sm">
           <div className="p-4 pb-2 flex justify-between items-center">
             <div className="flex items-center overflow-hidden transition-all">
@@ -33,8 +33,8 @@ export default function Sidebar({ children }) {
 
             <button
               onClick={() => setExpanded((curr) => !curr)}
-              className="p-1.5 rounded-lg bg-gray-50
-                    hover:bg-gray-100"
+              className="p-1.5 rounded-lg bg-white
+                    hover:bg-teal-100"
             >
               {expanded ? <ChevronFirst /> : <ChevronLast />}
             </button>
@@ -56,8 +56,6 @@ export default function Sidebar({ children }) {
                 <h4 className="font-semibold">{localStorage.getItem("nombres")} {localStorage.getItem("apellidos")}</h4>
                 <span>{localStorage.getItem('rol')}</span>
               </div>
-
-              <MoreVertical size={20} />
             </div>
           </div>
         </nav>
@@ -75,7 +73,7 @@ export function SidebarItem({ icon, text, to, active, alert }) {
 ${
   active
     ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
-    : "hover:bg-indigo-50 text-gray-600"
+    : "hover:bg-teal-100 text-gray-600"
 }`}
     >
       {icon}
