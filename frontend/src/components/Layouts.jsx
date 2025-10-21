@@ -6,19 +6,19 @@ export default function MainLayout({ children, title }) {
   const rol = localStorage.getItem("rol");
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex text-left">
       <Sidebar>
         {rol === "medico" && (
           <>
-            <SidebarItem icon={<LayoutDashboard size={20} />} text="Dashboard" to="/dashboard"/>
-            <SidebarItem icon={<StickyNote size={20} />} text="Listado Pacientes" to="/pacientes"/>
-            <SidebarItem icon={<Layers size={20} />} text="Registrar Paciente" to="/registropaciente"/>
-            <SidebarItem icon={<Network size={20} />} text="Analisis Radiografia" to="/analisisradiografia"/>
+            <SidebarItem icon={<LayoutDashboard size={25} />} text="Dashboard" to="/dashboard"/>
+            <SidebarItem icon={<StickyNote size={25} />} text="Listado Pacientes" to="/pacientes"/>
+            <SidebarItem icon={<Layers size={25} />} text="Registrar Paciente" to="/registropaciente"/>
+            <SidebarItem icon={<Network size={25} />} text="Analisis Radiografia" to="/analisisradiografia"/>
           </>
         )}
         {rol === "administrador" && (
           <>
-            <SidebarItem icon={<Cog size={20} />} text="Configuración" />
+            <SidebarItem icon={<Cog size={25} />} text="Configuración" />
           </>
         )}
       </Sidebar>

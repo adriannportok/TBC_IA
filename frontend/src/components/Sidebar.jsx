@@ -1,4 +1,4 @@
-import logo from "../assets/pulmones.png";
+import logo from "../assets/lungs.png";
 import userMedico from "../assets/userdoc.svg"; // Médico
 import userAdministrador from "../assets/usuarioadministrador.svg"; // Administrador
 import { ChevronFirst, ChevronLast } from "lucide-react";
@@ -28,7 +28,7 @@ export default function Sidebar({ children }) {
                 alt="Logo"
               />
               <span
-                className={`ml-3 font-bold text-2xl text-indigo-800 transition-all ${
+                className={`ml-3 font-bold text-2xl text-teal-600 transition-all ${
                   expanded ? "opacity-100" : "opacity-0 w-0"
                 }`}
               >
