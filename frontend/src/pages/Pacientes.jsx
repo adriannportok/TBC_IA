@@ -16,16 +16,16 @@ function Pacientes() {
       nombreCompleto: "Juan Pérez García",
       dni: "12345678",
       fechaNacimiento: "1990-05-15",
+      edad: "35",
       sexo: "M",
-      rcx: "RCX001",
     },
     {
       id: 2,
       nombreCompleto: "María López Martínez",
       dni: "87654321",
       fechaNacimiento: "1985-12-20",
+      edad: "39",
       sexo: "F",
-      rcx: "RCX002",
     },
   ]);
 
@@ -180,33 +180,33 @@ function Pacientes() {
                   <tr>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-medium text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       Nombre completo
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-medium text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       DNI
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-medium text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       Fecha de nacimiento
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-medium text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Sexo
+                      edad
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-medium text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      RCX
+                      Sexo
                     </th>
                   </tr>
                 </thead>
@@ -223,10 +223,10 @@ function Pacientes() {
                         {formatearFecha(paciente.fechaNacimiento)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {paciente.sexo === "M" ? "Masculino" : "Femenino"}
+                        {paciente.edad}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {paciente.rcx}
+                        {paciente.sexo === "M" ? "Masculino" : "Femenino"}
                       </td>
                     </tr>
                   ))}

@@ -1,6 +1,6 @@
 import Sidebar, { SidebarItem } from "./Sidebar";
 import { Link } from "react-router-dom";
-import { Home, LayoutDashboard, Layers, StickyNote, Cog } from "lucide-react";
+import { Home, LayoutDashboard, Layers, StickyNote, Cog, Network } from "lucide-react";
 
 export default function MainLayout({ children, title }) {
   const rol = localStorage.getItem("rol");
@@ -13,6 +13,7 @@ export default function MainLayout({ children, title }) {
             <SidebarItem icon={<LayoutDashboard size={20} />} text="Dashboard" to="/dashboard"/>
             <SidebarItem icon={<StickyNote size={20} />} text="Listado Pacientes" to="/pacientes"/>
             <SidebarItem icon={<Layers size={20} />} text="Registrar Paciente" to="/registropaciente"/>
+            <SidebarItem icon={<Network size={20} />} text="Analisis Radiografia" to="/analisisradiografia"/>
           </>
         )}
         {rol === "administrador" && (
