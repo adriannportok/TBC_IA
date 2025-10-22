@@ -1,24 +1,28 @@
 import logo from "../assets/lungs.png";
-import userMedico from "../assets/userdoc.svg"; // Médico
-import userAdministrador from "../assets/usuarioadministrador.svg"; // Administrador
+import userMedico from "../assets/userdoc.svg";
+import userAdministrador from "../assets/usuarioadministrador.svg";
 import { ChevronFirst, ChevronLast } from "lucide-react";
 import { createContext, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 
-const SidebarContext = createContext();
+export const SidebarContext = createContext();
 
-export default function Sidebar({ children }) {
+export default function Sidebar({ children, onToggle }) {
   const [expanded, setExpanded] = useState(true);
-
-  // Obtener el rol del usuario desde localStorage
   const rol = localStorage.getItem("rol");
-
-  // Seleccionar el SVG según el rol
   const userIcon = rol === "administrador" ? userAdministrador : userMedico;
 
+  const toggleSidebar = () => {
+    setExpanded((curr) => {
+      const newValue = !curr;
+      onToggle?.(newValue); // 🔹 notifica al layout
+      return newValue;
+    });
+  };
+
   return (
-    <>
-      <aside className="h-screen"> {/* Corregido: era "height:200vh", debe ser clase Tailwind */}
+    <SidebarContext.Provider value={{ expanded }}>
+      <aside className="h-screen fixed top-0 left-0 z-50">
         <nav className="h-full flex flex-col bg-white border-r border-gray-200 shadow-sm">
           <div className="p-4 pb-2 flex justify-between items-center">
             <div className="flex items-center overflow-hidden transition-all">
@@ -37,16 +41,14 @@ export default function Sidebar({ children }) {
             </div>
 
             <button
-              onClick={() => setExpanded((curr) => !curr)}
+              onClick={toggleSidebar}
               className="p-1.5 rounded-lg bg-white hover:bg-teal-100"
             >
               {expanded ? <ChevronFirst /> : <ChevronLast />}
             </button>
           </div>
 
-          <SidebarContext.Provider value={{ expanded }}>
-            <ul className="flex-1 px-3">{children}</ul>
-          </SidebarContext.Provider>
+          <ul className="flex-1 px-3">{children}</ul>
 
           <div className="border-t border-gray-200 flex p-3">
             <img src={userIcon} className="w-10 h-10 rounded-md" alt="Usuario" />
@@ -65,11 +67,10 @@ export default function Sidebar({ children }) {
           </div>
         </nav>
       </aside>
-    </>
+    </SidebarContext.Provider>
   );
 }
 
-// Tu componente SidebarItem permanece igual
 export function SidebarItem({ icon, text, to, active, alert }) {
   const { expanded } = useContext(SidebarContext);
   return (
@@ -87,14 +88,6 @@ export function SidebarItem({ icon, text, to, active, alert }) {
       >
         {text}
       </Link>
-
-      {alert && (
-        <div
-          className={`absolute right-2 w-2 h-2 rounded bg-indigo-400 ${
-            expanded ? "" : "top-2"
-          }`}
-        ></div>
-      )}
 
       {!expanded && (
         <div
