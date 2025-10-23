@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layouts";
+import axios from "axios";
 
 function RegistroPaciente() {
   const navigate = useNavigate();
@@ -37,15 +38,69 @@ function RegistroPaciente() {
   const handleRegister = async () => {
     setLoading(true);
     try {
-      console.log("Datos del paciente:", formData);
+      // Validaciones básicas
+      if (
+        !formData.nombre ||
+        !formData.apellido ||
+        !formData.dni ||
+        !formData.fechaNacimiento ||
+        !formData.genero ||
+        !formData.imagen
+      ) {
+        alert(
+          "Por favor complete todos los campos obligatorios, incluyendo la imagen"
+        );
+        return;
+      }
 
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      // Validar DNI (8 dígitos)
+      if (!/^\d{8}$/.test(formData.dni)) {
+        alert("El DNI debe tener 8 dígitos");
+        return;
+      }
 
-      alert("Paciente registrado exitosamente");
-      navigate("/pacientes");
+      // Obtener datos de sesión
+      const id_usuario = localStorage.getItem("id_usuario");
+      const usuario = localStorage.getItem("usuario");
+
+      if (!id_usuario || !usuario) {
+        alert("No hay sesión activa");
+        navigate("/");
+        return;
+      }
+
+      // Crear FormData para enviar la imagen
+      const formDataToSend = new FormData();
+      formDataToSend.append("id_usuario", id_usuario);
+      formDataToSend.append("nombre", formData.nombre);
+      formDataToSend.append("apellido", formData.apellido);
+      formDataToSend.append("dni", formData.dni);
+      formDataToSend.append("fechaNacimiento", formData.fechaNacimiento);
+      formDataToSend.append("genero", formData.genero);
+      formDataToSend.append("imagen", formData.imagen);
+      formDataToSend.append("usuario", usuario);
+
+      const response = await axios.post(
+        "http://localhost:5000/api/pacientes",
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        alert("Paciente registrado exitosamente");
+        navigate("/pacientes");
+      }
     } catch (error) {
       console.error("Error al registrar paciente:", error);
-      alert("Error al registrar paciente");
+      if (error.response?.data?.error) {
+        alert(`Error: ${error.response.data.error}`);
+      } else {
+        alert("Error al registrar el paciente");
+      }
     } finally {
       setLoading(false);
     }
@@ -63,7 +118,7 @@ function RegistroPaciente() {
 
   return (
     <Layout title="Registro de Paciente">
-      <div className="px-2 sm:px-4 py-2" >
+      <div className="px-2 sm:px-4 py-2">
         <div className="mb-4">
           <h2 className="text-left font-bold text-gray-700">
             Ingresar los datos del nuevo paciente

@@ -2,13 +2,20 @@ import logo from "../assets/lungs.png";
 import userMedico from "../assets/userdoc.svg";
 import userAdministrador from "../assets/usuarioadministrador.svg";
 import { ChevronFirst, ChevronLast } from "lucide-react";
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 export const SidebarContext = createContext();
 
 export default function Sidebar({ children, onToggle }) {
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(() => {
+    const savedState = localStorage.getItem("sidebarExpanded");
+    return savedState ? JSON.parse(savedState) : true;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("sidebarExpanded", JSON.stringify(expanded));
+  }, [expanded]);
   const rol = localStorage.getItem("rol");
   const userIcon = rol === "administrador" ? userAdministrador : userMedico;
 
@@ -51,7 +58,11 @@ export default function Sidebar({ children, onToggle }) {
           <ul className="flex-1 px-3">{children}</ul>
 
           <div className="border-t border-gray-200 flex p-3">
-            <img src={userIcon} className="w-10 h-10 rounded-md" alt="Usuario" />
+            <img
+              src={userIcon}
+              className="w-10 h-10 rounded-md"
+              alt="Usuario"
+            />
             <div
               className={`flex justify-between items-center overflow-hidden transition-all ${
                 expanded ? "w-52 ml-3" : "w-0"
@@ -59,7 +70,8 @@ export default function Sidebar({ children, onToggle }) {
             >
               <div className="flex flex-col items-start leading-4">
                 <h4 className="font-semibold">
-                  {localStorage.getItem("nombres")} {localStorage.getItem("apellidos")}
+                  {localStorage.getItem("nombres")}{" "}
+                  {localStorage.getItem("apellidos")}
                 </h4>
                 <span>{rol || "Invitado"}</span>
               </div>
@@ -74,7 +86,8 @@ export default function Sidebar({ children, onToggle }) {
 export function SidebarItem({ icon, text, to, active, alert }) {
   const { expanded } = useContext(SidebarContext);
   return (
-    <li
+    <Link
+      to={to}
       className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors group ${
         active
           ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
@@ -82,22 +95,23 @@ export function SidebarItem({ icon, text, to, active, alert }) {
       }`}
     >
       {icon}
-      <Link
-        to={to}
-        className={`overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"}`}
+      <span
+        className={`overflow-hidden transition-all ${
+          expanded ? "w-52 ml-3" : "w-0"
+        }`}
       >
         {text}
-      </Link>
+      </span>
 
       {!expanded && (
         <div
           className={`absolute left-full rounded-md px-2 py-1 ml-6 
-                bg-indigo-100 text-indigo-800 text-sm invisible opacity-0 -translate-x-3 
-                transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0`}
+              bg-indigo-100 text-indigo-800 text-sm invisible opacity-0 -translate-x-3 
+              transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0`}
         >
           {text}
         </div>
       )}
-    </li>
+    </Link>
   );
 }

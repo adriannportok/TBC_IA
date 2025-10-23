@@ -4,17 +4,41 @@ import { Home, Layers, StickyNote, Cog, Network } from "lucide-react";
 
 export default function MainLayout({ children, title }) {
   const rol = localStorage.getItem("rol");
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(() => {
+    const saved = localStorage.getItem("sidebarExpanded");
+    return saved ? JSON.parse(saved) : true;
+  });
 
   return (
     <div className="min-h-screen flex text-left">
-      <Sidebar onToggle={setExpanded}>
+      <Sidebar
+        onToggle={(value) => {
+          setExpanded(value);
+          localStorage.setItem("sidebarExpanded", JSON.stringify(value));
+        }}
+      >
         {rol === "medico" && (
           <>
-            <SidebarItem icon={<Home size={25} />} text="Dashboard" to="/dashboard" />
-            <SidebarItem icon={<StickyNote size={25} />} text="Listado Pacientes" to="/pacientes" />
-            <SidebarItem icon={<Layers size={25} />} text="Registrar Paciente" to="/registropaciente" />
-            <SidebarItem icon={<Network size={25} />} text="Análisis Radiografía" to="/analisisradiografia" />
+            <SidebarItem
+              icon={<Home size={25} />}
+              text="Dashboard"
+              to="/dashboard"
+            />
+            <SidebarItem
+              icon={<Layers size={25} />}
+              text="Registrar Paciente"
+              to="/registropaciente"
+            />
+            <SidebarItem
+              icon={<StickyNote size={25} />}
+              text="Listado Pacientes"
+              to="/pacientes"
+            />
+            <SidebarItem
+              icon={<Network size={25} />}
+              text="Análisis Radiografía"
+              to="/analisisradiografia"
+            />
           </>
         )}
         {rol === "administrador" && (
@@ -30,8 +54,13 @@ export default function MainLayout({ children, title }) {
         }`}
       >
         <header className="bg-teal-600 shadow flex-shrink-0">
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-12 flex justify-between items-center">
-            <h1 className="text-3xl font-bold tracking-tight text-white">{title}</h1>
+          <div
+            className={`mx-auto max-w-7xl py-6 flex justify-between items-center transition-all duration-300 
+    ${expanded ? "px-12" : ""}`}
+          >
+            <h1 className="text-3xl font-bold tracking-tight text-white">
+              {title}
+            </h1>
             <button
               onClick={() => {
                 localStorage.clear();

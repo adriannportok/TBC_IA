@@ -11,7 +11,7 @@ def validar_credenciales(usuario, clave):
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT clave, rol, nombres, apellidos FROM usuario WHERE usuario = %s", (usuario,))
+        cur.execute("SELECT id_usuario, clave, rol, nombres, apellidos FROM usuario WHERE usuario = %s", (usuario,))
         result = cur.fetchone()
         cur.close()
         conn.close()
@@ -19,14 +19,14 @@ def validar_credenciales(usuario, clave):
         if not result:
             return False, "Usuario no encontrado", None
 
-        clave_hash, rol, nombres, apellidos = result
+        id_usuario, clave_hash, rol, nombres, apellidos = result
         if bcrypt.checkpw(clave.encode('utf-8'), clave_hash.encode('utf-8')):
-            return True, "Login exitoso", rol, nombres, apellidos
+            return True, "Login exitoso",id_usuario, rol, nombres, apellidos
         else:
-            return False, "Clave incorrecta", None, None, None
+            return False, "Clave incorrecta", None, None, None, None
 
     except Exception as e:
-        return None, "Error interno del servidor", None, None, None
+        return None, "Error interno del servidor", None, None, None, None
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
@@ -34,11 +34,12 @@ def login():
     usuario = data.get('usuario')
     clave = data.get('clave')
 
-    resultado, mensaje, rol, nombres, apellidos = validar_credenciales(usuario, clave)
+    resultado, mensaje, id_usuario,  rol, nombres, apellidos = validar_credenciales(usuario, clave)
 
     if resultado:
         token = jwt.encode({
             "usuario": usuario,
+            "id_usuario": id_usuario,
             "rol": rol,
             "nombres": nombres,
             "apellidos": apellidos,
@@ -53,6 +54,7 @@ def login():
             "message": mensaje,
             "token": token,
             "usuario": usuario,
+            "id_usuario": id_usuario,
             "rol": rol,
             "nombres": nombres,
             "apellidos": apellidos,
